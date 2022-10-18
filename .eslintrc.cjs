@@ -11,19 +11,24 @@ module.exports = {
   overrides: [
   ],
   parserOptions: {
-    project: './tsconfig.json',
-    parser: '@typescript-eslint/parser',
     ecmaVersion: 'latest',
-    sourceType: 'module'
+    sourceType: 'module',
+    project: './tsconfig.json'
   },
   plugins: [
     'react'
   ],
+  settings: {
+    react: {
+      version: '^18.2.0'
+    }
+  },
   rules: {
-    '@typescript-eslint/explicit-function-return-type': [0],
-    '@typescript-eslint/strict-boolean-expressions': [0],
-    '@typescript-eslint/no-floating-promises': [0],
-    '@typescript-eslint/return-await': [0],
-    'react/react-in-jsx-scope': [0]
+    '@typescript-eslint/explicit-function-return-type': 'off',
+    '@typescript-eslint/strict-boolean-expressions': 'off',
+    '@typescript-eslint/no-floating-promises': 'off',
+    '@typescript-eslint/return-await': 'off',
+    '@typescript-eslint/triple-slash-reference': 'off',
+    'react/react-in-jsx-scope': 'off'
   }
 }
