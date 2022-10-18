@@ -1,32 +1,48 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
+import { useEffect, useState, React } from 'react'
+import { Types, AptosClient } from 'aptos'
 import './App.css'
 
-function App() {
-  const [count, setCount] = useState(0)
+const client = new AptosClient('https://fullnode.devnet.aptoslabs.com/v1')
+
+function App () {
+  const [address, setAddress] = useState<string | null>(null)
+  const [account, setAccount] = useState<Types.AccountData | null>(null)
+  const [modules, setModules] = useState<Types.MoveModuleBytecode[]>([])
+
+  useEffect(() => {
+    if (!address) return
+    client.getAccount(address).then(setAccount)
+
+    client.getAccountModules(address).then(setModules)
+
+    client.getAccountResources(address).then(data => {
+      console.log(data)
+    })
+  }, [address])
+
+  // const hasModule = modules.some(m => m.abi?.name === 'Message')
+
+  useEffect(() => {
+    const connect = async () => {
+      return await window.aptos.connect()
+    }
+    connect().then(result => {
+      return window.aptos.isConnected()
+    }).then(connected => {
+      if (connected) {
+        return window.aptos.account()
+      }
+    }).then((data: { address: string }) => {
+      setAddress(data.address)
+    })
+  }, [])
 
   return (
     <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <p><code>{ address }</code></p>
+      <span>{ JSON.stringify(account) }</span>
+      <p>{ JSON.stringify(modules) }</p>
+      <p><code>{ account?.sequence_number }</code></p>
     </div>
   )
 }
