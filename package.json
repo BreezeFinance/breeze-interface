@@ -3,9 +3,11 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "homepage": "https://breezefinance.github.io",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "deploy": "yarn build && gh-pages -d dist",
     "preview": "vite preview",
     "prepare": "husky install",
     "lint": "eslint --fix src/**/*.{js,jsx,ts,tsx}"
@@ -36,6 +38,7 @@
     "eslint-plugin-n": "^15.0.0",
     "eslint-plugin-promise": "^6.0.0",
     "eslint-plugin-react": "^7.31.10",
+    "gh-pages": "^4.0.0",
     "husky": "^8.0.1",
     "lint-staged": "^13.0.3",
     "stylus": "^0.59.0",
