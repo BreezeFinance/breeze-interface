@@ -29,6 +29,7 @@ module.exports = {
     '@typescript-eslint/no-floating-promises': 'off',
     '@typescript-eslint/return-await': 'off',
     '@typescript-eslint/triple-slash-reference': 'off',
+    '@typescript-eslint/restrict-template-expressions': 'off',
     'react/no-children-prop': 'off',
     'react/react-in-jsx-scope': 'off'
   }

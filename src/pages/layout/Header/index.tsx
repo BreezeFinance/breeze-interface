@@ -1,19 +1,19 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import './index.styl'
-// import { Types, AptosClient } from 'aptos'
+import { AptosClient } from 'aptos'
 
-// const client = new AptosClient('https://fullnode.devnet.aptoslabs.com/v1')
+const client = new AptosClient('https://testnet.aptoslabs.com')
 
 function Header () {
   const [address, setAddress] = useState<string | null>(null)
   // const [account, setAccount] = useState<Types.AccountData | null>(null)
-  // const [modules, setModules] = useState<Types.MoveModuleBytecode[]>([])
+  // const [coinClient, setCoinClient] = useState<CoinClient | null>(null)
 
   const connect = useCallback(() => {
     const connect = async () => {
       return await window.aptos.connect()
     }
-    connect().then(result => {
+    connect().then(() => {
       return window.aptos.isConnected()
     }).then(connected => {
       if (connected) {
@@ -23,6 +23,20 @@ function Header () {
       setAddress(data.address)
     })
   }, [])
+
+  useEffect(() => {
+    if (!address) return
+    client.getAccountResources(address).then(coins => {
+      console.log(coins)
+      coins.forEach(coin => {
+        if (coin.type.includes('coin')) {
+          // const coinName = coin.type.split('::')[coin.type.split('::').length - 1]
+          // console.log(`${coinName}: ${coin.data.coin.value}`)
+        }
+      })
+    })
+  }, [address])
+
   return (
     <div className="header">
       <div></div>
