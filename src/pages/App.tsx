@@ -1,5 +1,6 @@
-import './App.css'
+import Swap from './Swap'
 import Header from './layout/Header'
+import { Box } from '@chakra-ui/react'
 
 function App () {
   // const [address, setAddress] = useState<string | null>(null)
@@ -40,8 +41,11 @@ function App () {
       <span>{ JSON.stringify(account) }</span>
       <p>{ JSON.stringify(modules) }</p>
       <p><code>{ account?.sequence_number }</code></p> */}
-
       <Header></Header>
+
+      <Box w='771px' height='267px' position='absolute' bg='rgba(251, 132, 132, 0.2);' left='50%' transform='translate(-50%, 0)' top='130px' filter='blur(144px)'></Box>
+
+      <Swap></Swap>
     </div>
   )
 }

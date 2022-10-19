@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import App from './App'
+import App from './pages/App'
+import { ChakraProvider } from '@chakra-ui/react'
 import './index.css'
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
@@ -8,7 +9,10 @@ const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 window.addEventListener('load', () => {
   root.render(
     <React.StrictMode>
-      <App />
+      <ChakraProvider resetCSS>
+        <App />
+      </ChakraProvider>
+      {/* <App /> */}
     </React.StrictMode>
   )
 })
