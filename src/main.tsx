@@ -4,7 +4,7 @@ import App from './pages/App'
 import { ChakraProvider } from '@chakra-ui/react'
 import './index.css'
 
-const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
+const root = ReactDOM.createRoot(document.getElementById('root'))
 
 window.addEventListener('load', () => {
   root.render(
