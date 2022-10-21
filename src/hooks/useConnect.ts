@@ -11,8 +11,9 @@ const useConnect = () => {
 
   const [account, setAccount] = useState<Types.AccountData | null>(null)
 
+  const wallet = getWallet()
+
   const connect = useCallback(() => {
-    const wallet = getWallet()
     const connect = async () => {
       return await wallet.connect()
     }
@@ -24,6 +25,7 @@ const useConnect = () => {
         return wallet.account()
       }
     }).then((data: { address: string }) => {
+      console.log('get address:', data.address)
       setAddress(data.address)
     })
   }, [])
@@ -34,7 +36,6 @@ const useConnect = () => {
   }, [address])
 
   const disConnect = useCallback(() => {
-    const wallet = getWallet()
     const disConnect = async () => {
       return await wallet.disconnect()
     }
@@ -43,13 +44,6 @@ const useConnect = () => {
       setAddress(null)
     })
   }, [])
-
-  // const getResources = async () => {
-  //   if (!address) return
-  //   await client.getAccountResource('0x498d8926f16eb9ca90cab1b3a26aa6f97a080b3fcbe6e83ae150b7243a00fb68', '0x1::coin::CoinInfo<0x498d8926f16eb9ca90cab1b3a26aa6f97a080b3fcbe6e83ae150b7243a00fb68::devnet_coins::DevnetBTC>').then(data => {
-  //     console.log(data)
-  //   })
-  // }
 
   return { connect, disConnect, isConnected, address, account }
 }

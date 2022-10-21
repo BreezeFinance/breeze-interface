@@ -30,6 +30,8 @@ module.exports = {
     '@typescript-eslint/return-await': 'off',
     '@typescript-eslint/triple-slash-reference': 'off',
     '@typescript-eslint/restrict-template-expressions': 'off',
+    '@typescript-eslint/no-non-null-assertion': 'off',
+    '@typescript-eslint/no-unnecessary-type-assertion': 'off',
     'react/no-children-prop': 'off',
     'react/react-in-jsx-scope': 'off'
   }
