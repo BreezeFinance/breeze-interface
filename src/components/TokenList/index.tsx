@@ -19,7 +19,7 @@ export default function TokenList (props: TokenListProps) {
           pointerEvents='none'
           children={<SearchIcon />}
         />
-        <Input placeholder='搜索名称或粘贴地址'></Input>
+        <Input placeholder='search coin name or paste address'></Input>
       </InputGroup>
 
       <Box mt='16px'>
