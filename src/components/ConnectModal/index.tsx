@@ -2,7 +2,7 @@ import { Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOve
 import useWalletStore from '../../store/useWalletStore'
 import WalletList from '../WalletList/index'
 
-function Connect () {
+function ConnectModal () {
   const connect = useWalletStore(state => state.connect)
 
   const isOpen = useWalletStore(state => state.isOpenConnectModal)
@@ -31,4 +31,4 @@ function Connect () {
   )
 }
 
-export default Connect
+export default ConnectModal

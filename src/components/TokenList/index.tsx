@@ -10,8 +10,6 @@ interface TokenListProps {
 export default function TokenList (props: TokenListProps) {
   const { onSelectedToken } = props
   const choosedItem = (item: Token) => {
-    console.log('choosed')
-    console.log(item)
     onSelectedToken(item)
   }
   return (

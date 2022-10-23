@@ -1,12 +1,23 @@
 import { ISwapOption } from './../apis/transaction/types'
-import { useCallback } from 'react'
+import { useCallback, useState, useEffect, ChangeEvent } from 'react'
 import { getSwapTransaction } from '../apis/transaction'
-import useWallet from './useWallet'
 import { getDexByPool } from '../utils/dex'
+import { getWallet } from '../utils/wallet'
+import { Token } from '../types/token'
+import { useToast } from '@chakra-ui/react'
 const words = ['zero', 'one', 'two', 'three', 'four', 'five']
 
+interface TokenAmount extends Token {
+  amount: number
+}
+
 const useSwap = () => {
-  const { wallet } = useWallet()
+  const wallet = getWallet()
+
+  const [tokenIn, setTokenIn] = useState<TokenAmount | null>(null)
+  const [tokenOut, setTokenOut] = useState<TokenAmount | null>(null)
+
+  const toast = useToast()
 
   const registerCoin = async (coin) => {
     const trans = {
@@ -65,16 +76,49 @@ const useSwap = () => {
     await wallet.signAndSubmitTransaction(transaction)
   }, [])
 
-  // request swap path
-  const getSwapOptions = useCallback(async (from: string, to: string, amount: number) => {
-    return await getSwapTransaction({
-      from,
-      to,
-      amount
-    })
-  }, [])
+  useEffect(() => {
+    // console.log('changed-----------')
+  }, [tokenIn, tokenOut])
 
-  return { swap, getSwapOptions, registerCoin }
+  // request swap path
+  const getSwapOptions = useCallback(async () => {
+    if (!tokenIn || !tokenOut) {
+      return toast({
+        description: 'Please select token first',
+        position: 'top-right',
+        status: 'warning',
+        duration: 3000
+      })
+    }
+    if (!tokenIn.amount || !tokenOut.amount) {
+      return toast({
+        description: 'Please input token amount',
+        position: 'top-right',
+        status: 'warning',
+        duration: 3000
+      })
+    }
+    return await getSwapTransaction({
+      from: tokenIn.address,
+      to: tokenOut.address,
+      amount: tokenIn.amount
+    })
+  }, [tokenIn, tokenOut])
+
+  const onInputIn = (e: ChangeEvent<HTMLInputElement>) => {
+    console.log(e)
+    if (tokenIn) {
+      tokenIn.amount = Number(e.target.value)
+    }
+  }
+
+  const onInputOut = (e: ChangeEvent<HTMLInputElement>) => {
+    if (tokenOut) {
+      tokenOut.amount = Number(e.target.value)
+    }
+  }
+
+  return { tokenIn, setTokenIn, tokenOut, setTokenOut, onInputIn, onInputOut, swap, getSwapOptions, registerCoin }
 }
 
 export default useSwap
