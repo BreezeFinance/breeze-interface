@@ -30,16 +30,14 @@ export default function Swap (props) {
 
   const onSelectedToken = useCallback((token: Token) => {
     if (direct === Direct.in) {
-      console.log('select in')
       setTokenIn({ ...token, amount: 0 })
     }
     if (direct === Direct.out) {
-      console.log('select out')
       setTokenOut({ ...token, amount: 0 })
     }
 
     setIsOpen(false)
-  }, [direct]) // TODO: must code [direct]
+  }, [direct])
 
   const onOpenModal = (direct: Direct) => {
     setDirect(direct)
@@ -51,7 +49,7 @@ export default function Swap (props) {
   }
 
   const onSwap = () => {
-    getSwapOptions()
+    getSwapOptions(tokenIn, tokenOut)
   }
 
   return (

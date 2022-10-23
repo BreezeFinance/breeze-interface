@@ -77,11 +77,12 @@ const useSwap = () => {
   }, [])
 
   useEffect(() => {
-    // console.log('changed-----------')
+    console.log('changed-----------111')
+    console.log(tokenIn)
   }, [tokenIn, tokenOut])
 
   // request swap path
-  const getSwapOptions = useCallback(async () => {
+  const getSwapOptions = async (tokenIn?: TokenAmount, tokenOut?: TokenAmount) => {
     if (!tokenIn || !tokenOut) {
       return toast({
         description: 'Please select token first',
@@ -103,10 +104,9 @@ const useSwap = () => {
       to: tokenOut.address,
       amount: tokenIn.amount
     })
-  }, [tokenIn, tokenOut])
+  }
 
   const onInputIn = (e: ChangeEvent<HTMLInputElement>) => {
-    console.log(e)
     if (tokenIn) {
       tokenIn.amount = Number(e.target.value)
     }
