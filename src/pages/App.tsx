@@ -1,6 +1,7 @@
 import Swap from './Swap'
 import Header from './layout/Header'
 import { Box } from '@chakra-ui/react'
+import Connect from '../components/Connect'
 
 function App () {
   // const [address, setAddress] = useState<string | null>(null)
@@ -44,7 +45,7 @@ function App () {
       <Header></Header>
 
       <Box w='771px' height='267px' position='absolute' bg='rgba(251, 132, 132, 0.2);' left='50%' transform='translate(-50%, 0)' top='130px' filter='blur(144px)'></Box>
-
+      <Connect></Connect>
       <Swap></Swap>
     </div>
   )

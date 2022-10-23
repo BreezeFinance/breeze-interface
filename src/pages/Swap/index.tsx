@@ -5,20 +5,21 @@ import SwapIcon from '../../assets/swap.svg'
 import { useState } from 'react'
 import TokenList from '../../components/TokenList'
 import { Token } from '../../types/token'
-import useConnect from '../../hooks/useConnect'
+import useWalletStore from '../../store/useWalletStore'
 
 enum Direct {
   in,
   out
 }
 
-export default function Swap () {
+export default function Swap (props) {
   const [isOpen, setIsOpen] = useState(false)
   const [direct, setDirect] = useState<Direct>(Direct.in)
   const [token0, setToken0] = useState<Token | null>(null)
   const [token1, setToken1] = useState<Token | null>(null)
 
-  const { connect, isConnected } = useConnect()
+  const isConnected = useWalletStore(state => state.isConnected)
+  const openConnectModal = useWalletStore(state => state.openConnectModal)
 
   const onSwitchPos = () => {
     console.log('switch')
@@ -85,7 +86,7 @@ export default function Swap () {
       </Box>
 
       {/* swap button */}
-      <Button w='100%' h='56px' lineHeight='56px' mt='16px' variant='solid' bg='#FFFFFF' color='#000000' fontSize='18px' fontWeight='700' onClick={connect}>
+      <Button w='100%' h='56px' lineHeight='56px' mt='16px' variant='solid' bg='#FFFFFF' color='#000000' fontSize='18px' fontWeight='700' onClick={isConnected ? onCloseModal : () => openConnectModal(true)}>
         { isConnected ? 'Swap' : 'Connect' }
       </Button>
 
