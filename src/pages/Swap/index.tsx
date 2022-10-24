@@ -2,36 +2,42 @@ import './index.styl'
 import { Box, Button, Flex, Text, Input, Image, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody } from '@chakra-ui/react'
 import ArrowDownIcon from '../../assets/arrow-down.svg'
 import SwapIcon from '../../assets/swap.svg'
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import TokenList from '../../components/TokenList'
 import { Token } from '../../types/token'
-import useConnect from '../../hooks/useConnect'
+import useWalletStore from '../../store/useWalletStore'
+import useSwap from '../../hooks/useSwap'
 
 enum Direct {
-  in,
+  in = 1,
   out
 }
 
-export default function Swap () {
+export default function Swap (props) {
   const [isOpen, setIsOpen] = useState(false)
   const [direct, setDirect] = useState<Direct>(Direct.in)
-  const [token0, setToken0] = useState<Token | null>(null)
-  const [token1, setToken1] = useState<Token | null>(null)
 
-  const { connect, isConnected } = useConnect()
+  const { tokenIn, setTokenIn, onInputIn, tokenOut, setTokenOut, onInputOut } = useSwap()
+  const { getSwapOptions } = useSwap()
+
+  const isConnected = useWalletStore(state => state.isConnected)
+  const openConnectModal = useWalletStore(state => state.openConnectModal)
 
   const onSwitchPos = () => {
-    console.log('switch')
-    setToken0(token1)
-    setToken1(token0)
+    setTokenIn(tokenOut)
+    setTokenOut(tokenIn)
   }
 
-  const onSelectedToken = (token: Token) => {
-    if (direct === Direct.in) setToken0(token)
-    if (direct === Direct.out) setToken1(token)
+  const onSelectedToken = useCallback((token: Token) => {
+    if (direct === Direct.in) {
+      setTokenIn({ ...token, amount: 0 })
+    }
+    if (direct === Direct.out) {
+      setTokenOut({ ...token, amount: 0 })
+    }
 
     setIsOpen(false)
-  }
+  }, [direct])
 
   const onOpenModal = (direct: Direct) => {
     setDirect(direct)
@@ -40,6 +46,10 @@ export default function Swap () {
 
   const onCloseModal = () => {
     setIsOpen(false)
+  }
+
+  const onSwap = () => {
+    getSwapOptions(tokenIn, tokenOut)
   }
 
   return (
@@ -53,10 +63,10 @@ export default function Swap () {
           </Flex>
 
           <Flex justify='space-between' align='center'>
-            <Input bg='transparent' color='#FFFFFF' fontSize='24px' variant='unstyled' placeholder='0.00' height='33px' lineHeight='33px' type='number' w='auto'></Input>
+            <Input bg='transparent' color='#FFFFFF' fontSize='24px' variant='unstyled' placeholder='0.00' height='33px' lineHeight='33px' type='number' w='auto' isDisabled={!tokenIn} onChange={onInputIn}></Input>
             <Box display='flex' justifyContent='space-between' textAlign='right' alignItems='center' cursor='pointer' onClick={ () => onOpenModal(Direct.in) }>
-              <Image src={token0?.icon} w='16px' borderRadius='50%' mr='12px'></Image>
-              <Text as='span' color='#FFF' fontSize='16px' fontWeight='500' mr='12px'>{ token0 ? token0.name : 'select token' }</Text>
+              <Image src={tokenIn?.icon} w='16px' borderRadius='50%' mr='12px'></Image>
+              <Text as='span' color='#FFF' fontSize='16px' fontWeight='500' mr='12px'>{ tokenIn ? tokenIn.name : 'select token' }</Text>
               <Image src={ArrowDownIcon} w='16px'></Image>
             </Box>
           </Flex>
@@ -70,10 +80,10 @@ export default function Swap () {
           </Flex>
 
           <Flex justify='space-between' align='center'>
-            <Input bg='transparent' color='#FFFFFF' fontSize='24px' variant='unstyled' placeholder='0.00' height='33px' lineHeight='33px' type='number' w='auto'></Input>
+            <Input bg='transparent' color='#FFFFFF' fontSize='24px' variant='unstyled' placeholder='0.00' height='33px' lineHeight='33px' type='number' w='auto' isDisabled={!tokenOut} onChange={onInputOut}></Input>
             <Box display='flex' justifyContent='space-between' textAlign='right' alignItems='center' cursor='pointer' onClick={() => onOpenModal(Direct.out)}>
-              <Image src={token1?.icon} w='16px' borderRadius='50%' mr='12px'></Image>
-              <Text as='span' color='#FFF' fontSize='16px' fontWeight='500' mr='12px'>{ token1 ? token1.name : 'select token' }</Text>
+              <Image src={tokenOut?.icon} w='16px' borderRadius='50%' mr='12px'></Image>
+              <Text as='span' color='#FFF' fontSize='16px' fontWeight='500' mr='12px'>{ tokenOut ? tokenOut.name : 'select token' }</Text>
               <Image src={ArrowDownIcon} w='16px'></Image>
             </Box>
           </Flex>
@@ -85,7 +95,7 @@ export default function Swap () {
       </Box>
 
       {/* swap button */}
-      <Button w='100%' h='56px' lineHeight='56px' mt='16px' variant='solid' bg='#FFFFFF' color='#000000' fontSize='18px' fontWeight='700' onClick={connect}>
+      <Button w='100%' h='56px' lineHeight='56px' mt='16px' variant='solid' bg='#FFFFFF' color='#000000' fontSize='18px' fontWeight='700' onClick={isConnected ? onSwap : () => openConnectModal(true)}>
         { isConnected ? 'Swap' : 'Connect' }
       </Button>
 
