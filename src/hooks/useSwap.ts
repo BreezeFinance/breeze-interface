@@ -1,10 +1,11 @@
 import { ISwapOption } from './../apis/transaction/types'
-import { useCallback, useState, useEffect, ChangeEvent } from 'react'
+import { useCallback, useState, ChangeEvent } from 'react'
 import { getSwapTransaction } from '../apis/transaction'
 import { getDexByPool } from '../utils/dex'
 import { getWallet } from '../utils/wallet'
 import { Token } from '../types/token'
 import { useToast } from '@chakra-ui/react'
+
 const words = ['zero', 'one', 'two', 'three', 'four', 'five']
 
 interface TokenAmount extends Token {
@@ -75,11 +76,6 @@ const useSwap = () => {
     // submit transaction
     await wallet.signAndSubmitTransaction(transaction)
   }, [])
-
-  useEffect(() => {
-    console.log('changed-----------111')
-    console.log(tokenIn)
-  }, [tokenIn, tokenOut])
 
   // request swap path
   const getSwapOptions = async (tokenIn?: TokenAmount, tokenOut?: TokenAmount) => {
