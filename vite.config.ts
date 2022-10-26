@@ -1,21 +1,39 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-// import analyze from 'rollup-plugin-analyzer'
-import { chunkSplitPlugin } from 'vite-plugin-chunk-split'
-// https://vitejs.dev/config/
+
 export default defineConfig({
   base: './',
   plugins: [
-    react(),
-    chunkSplitPlugin({
-      strategy: 'default',
-      customSplitting: {
-        'react-vendor': ['react', 'react-dom'],
-        'chakra-vendor': ['@chakra-ui/react', '@chakra-ui/icons', '@emotion/react', '@emotion/styled', 'framer-motion']
-      }
-    })
+    react()
   ],
   build: {
-    target: 'es2015'
+    target: 'es2015',
+    cssCodeSplit: true,
+    reportCompressedSize: true,
+    chunkSizeWarningLimit: 200,
+    rollupOptions: {
+      output: {
+        entryFileNames: 'static/js/[name]-[hash].js',
+        chunkFileNames: 'static/js/[name]-[hash].js',
+        assetFileNames: 'static/[ext]/[name]-[hash].[ext]',
+        manualChunks (id) {
+          if (id.includes('node_modules')) {
+            if (id.includes('lodash-es')) {
+              console.log(id)
+            }
+
+            const chunks = String(id).split('node_modules/')[1].split('/')
+            switch (chunks[0]) {
+              case 'react':
+              case 'react-dom':
+              case 'lodash-es':
+                return chunks[0]
+              default:
+                return 'vendor'
+            }
+          }
+        }
+      }
+    }
   }
 })
