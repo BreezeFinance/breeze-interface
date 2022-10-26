@@ -18,11 +18,7 @@ export default defineConfig({
         assetFileNames: 'static/[ext]/[name]-[hash].[ext]',
         manualChunks (id) {
           if (id.includes('node_modules')) {
-            if (id.includes('lodash-es')) {
-              console.log(id)
-            }
-
-            const chunks = String(id).split('node_modules/')[1].split('/')
+            const chunks = id.split('node_modules/')[1].split('/')
             switch (chunks[0]) {
               case 'react':
               case 'react-dom':
