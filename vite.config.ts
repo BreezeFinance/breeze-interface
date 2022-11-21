@@ -1,10 +1,18 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import { visualizer } from 'rollup-plugin-visualizer'
 
 export default defineConfig({
   base: './',
   plugins: [
-    react()
+    react(),
+    visualizer({
+      gzipSize: true,
+      brotliSize: true,
+      emitFile: true,
+      filename: 'analyser.html',
+      open: true
+    })
   ],
   build: {
     target: 'es2015',
@@ -23,6 +31,8 @@ export default defineConfig({
               case 'react':
               case 'react-dom':
               case 'lodash-es':
+              case '@chakra-ui':
+              case 'framer-motion':
                 return chunks[0]
               default:
                 return 'vendor'
